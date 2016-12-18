@@ -34,14 +34,13 @@
 
         $(document.body).append(this.$controlPanel)
 
-        this.$el.on('mouseleave', function(){
-            self.hideControlPanel()
-        })
         this.$el.on('mousemove', function(){
-            self.showControlPanel()
+            self.refreshControlPanel()
         })
-        this.$controlPanel.on('mouseleave', function(){ self.hideControlPanel() })
-        this.$controlPanel.on('mouseenter', function(){ self.showControlPanel() })
+
+        this.$controlPanel.on('mouseenter', function(){ self.refreshControlPanel() })
+
+        self.showControlPanel()
 
         this.$edit.on('click', function(){ self.clickEdit() })
         this.$save.on('click', function(){ self.clickSave() })
@@ -81,7 +80,10 @@
     Editable.prototype.clickEdit = function() {
         if (this.fileMode == 'htm') {
             this.$el.redactor({
-                focus: true
+                focus: true,
+                toolbar: false,
+                paragraphize: false,
+                linebreaks: true
             })
         }
         else {
@@ -105,6 +107,9 @@
     }
 
     Editable.prototype.refreshControlPanel = function() {
+        if (!this.$controlPanel.hasClass('visible'))
+            this.showControlPanel()
+
         this.$controlPanel
             .width(this.$el.outerWidth())
             .height(this.$el.outerHeight())
@@ -151,6 +156,19 @@
 
     $(document).on('mouseenter', '[data-control="editable"]', function() {
         $(this).editable()
+    });
+
+    $(window).scroll(function() {
+        $(document).find('[data-control="editable"]').each(function(){
+            if ($(this).data('oc.example') != undefined)
+                $(this).data('oc.example').hideControlPanel()
+        })
+    });
+
+    $(document).on('click','.redactor-editor',function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
     });
 
 }(window.jQuery);

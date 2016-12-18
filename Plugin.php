@@ -1,4 +1,4 @@
-<?php namespace RainLab\Editable;
+<?php namespace Fw\Editable;
 
 use System\Classes\PluginBase;
 
@@ -15,9 +15,9 @@ class Plugin extends PluginBase
     public function pluginDetails()
     {
         return [
-            'name' => 'rainlab.editable::lang.plugin.name',
-            'description' => 'rainlab.editable::lang.plugin.description',
-            'author' => 'RainLab',
+            'name' => 'fw.editable::lang.plugin.name',
+            'description' => 'fw.editable::lang.plugin.description',
+            'author' => 'Maria Vilaró',
             'icon' => 'icon-leaf'
         ];
     }
@@ -25,7 +25,8 @@ class Plugin extends PluginBase
     public function registerComponents()
     {
         return [
-            'RainLab\Editable\Components\Editable' => 'editable',
+            'Fw\Editable\Components\Editable' => 'editable',
+            'Fw\Editable\Components\NotEditable' => 'noteditable',
         ];
     }
 }

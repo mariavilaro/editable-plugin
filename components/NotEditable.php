@@ -5,7 +5,7 @@ use BackendAuth;
 use Cms\Classes\Content;
 use Cms\Classes\ComponentBase;
 
-class Editable extends ComponentBase
+class NotEditable extends ComponentBase
 {
     public $content;
     public $isEditor;
@@ -15,8 +15,8 @@ class Editable extends ComponentBase
     public function componentDetails()
     {
         return [
-            'name' => 'fw.editable::lang.component_editable.name',
-            'description' => 'fw.editable::lang.component_editable.description',
+            'name' => 'fw.editable::lang.component_noteditable.name',
+            'description' => 'fw.editable::lang.component_noteditable.description',
         ];
     }
 
@@ -40,14 +40,6 @@ class Editable extends ComponentBase
     public function onRun()
     {
         $this->isEditor = $this->checkEditor();
-
-        if ($this->isEditor) {
-            $this->addCss('assets/vendor/redactor/redactor.css');
-            $this->addJs('assets/vendor/redactor/redactor.js');
-
-            $this->addCss('assets/css/editable.css');
-            $this->addJs('assets/js/editable.js');
-        }
     }
 
     private function createContent($file, $content = NULL) {
@@ -106,25 +98,8 @@ class Editable extends ComponentBase
         //remove excess <br> or <br /> from the end of the text
         $content = preg_replace('#(( ){0,}<br( {0,})(/{0,1})>){1,}$#i', '', $content);
 
-        if (!$this->isEditor)
-            return $content;
+        return $content;
 
-        $this->content = $content;
-    }
-
-    public function onSave()
-    {
-        if (!$this->checkEditor())
-            return;
-
-        $fileName = post('file');
-        $template = Content::load($this->getTheme(), $fileName);
-        if ( $template !== null) {
-            $template->fill(['markup' => post('content')]);
-            $template->save();
-        } else {
-            $this->createContent($fileName, post('content'));
-        }
     }
 
     public function checkEditor()
